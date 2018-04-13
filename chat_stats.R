@@ -40,6 +40,9 @@
     ### remove non-html with regex '^(?!.*\#)^(?!.*\:).*$' -> ''
     ### more cleanup with regex
       ## ' *[A-Z] *' -> ''
+      ## '[0-9]+(&#[0-9]+)' -> '\1'
+    ### put every emoji in a new line
+      ## ' ' -> '\n'
     ### replace '\n\n' -> '\n'
       ## repeat until no more matches are found
     ### open in excel (without delimiters) and save as 'chat_emojis.csv'
@@ -196,15 +199,15 @@ ggplot(dataft, aes(word, freq)) +
 # emojis
 dataemos <- data.frame(table(emos))
 dataemos <- head(dataemos[order(-dataemos$Freq),], 10)
-dataemos$Var1 <- factor(dataemos$Var1, levels=head(dataemos$Var1,10))
+dataemos$emos <- factor(dataemos$emos, levels=head(dataemos$emos,10))
 
-ggplot(dataemos, aes(Var1, Freq)) +
+ggplot(dataemos, aes(emos, Freq)) +
        ggtitle('most frequent emojis') +
        geom_col(fill=scale_fill_brewer(palette='Pastel2')$palette(8)[2]) +
        plottheme + theme(axis.text.x = element_blank())
 
 # lastly, make the labels as emojis
-dataemos$Var1
+dataemos$emos
 # copy the output in a browser, e.g. google search
 # copy the emoji images from the result
 # paste them in the graph with an image manipulation program, e.g. gimp
