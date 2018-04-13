@@ -56,11 +56,13 @@ dat <- read.csv('C:\\R\\git\\chat.csv', header = FALSE)
 datsenders <- dat[1:3]
 colnames(datsenders) <- c('date', 'time', 'sender')
 datsenders$sender <- factor(datsenders$sender, levels = c('you', 'me'))
-emos <- read.csv('C:\\R\\git\\chat_emojis.csv', header = FALSE,
+emos <- read.csv('C:\\R\\git\\chat_emojis.csv',
+		 header = FALSE,
                  encoding='UTF-8')
+words <- apply(dat[ , c(4:ncol(dat)) ] , 1 , paste)
 
+# parse the time
 Sys.setlocale('LC_TIME', 'C')
-
 datsenders$iso <- paste(datsenders$date, datsenders$time, sep=' ')
 datsenders$iso <- strptime(datsenders$iso, '%d/%m/%Y, %H:%M')
 datsenders$month <- factor(months(datsenders$iso, abbreviate=TRUE),
@@ -72,9 +74,6 @@ datsenders$day <- factor(weekdays(datsenders$iso, abbreviate=TRUE),
                          levels = c('Mon', 'Tue', 'Wed', 'Thu',
                                     'Fri', 'Sat', 'Sun'))
 datsenders$hour <- format(datsenders$iso, '%H')
-
-words <- apply(dat[ , c(4:ncol(dat)) ] , 1 , paste)
-tbl <- table(datsenders$sender)
 
 # format date column as date datatype
 datsenders$date <- as.Date(as.character(datsenders$date), format = '%d/%m/%Y')
@@ -101,23 +100,24 @@ plottheme <- theme(plot.title = element_text(family = 'Helvetica',
                                               colour = 'cornflowerblue',
                                               size = (10)))
 minimalplottheme <- theme_void() + 
-		theme(plot.title = element_text(family = 'Helvetica',
-                                            colour = 'steelblue',
-                                            face = 'bold',
-                                            size = (15)), 
-                  legend.title = element_text(family = 'Helvetica',
-                                              colour = 'steelblue',
-                                              face = 'bold.italic'), 
-                  legend.text = element_text(family = 'Helvetica',
-                                             colour = 'cornflowerblue',
-                                             face = 'italic'), 
-                  axis.title = element_blank(),
-                  axis.text = element_blank())
+		    theme(plot.title = element_text(family = 'Helvetica',
+                                                    colour = 'steelblue',
+                                                    face = 'bold',
+                                                    size = (15)), 
+                          legend.title = element_text(family = 'Helvetica',
+                                                      colour = 'steelblue',
+                                                      face = 'bold.italic'), 
+                          legend.text = element_text(family = 'Helvetica',
+                                                     colour = 'cornflowerblue',
+                                                     face = 'italic'), 
+                          axis.title = element_blank(),
+                          axis.text = element_blank())
 
 
 ## stats
 
 # days
+tbl <- table(datsenders$sender)
 datsenders$date[as.numeric(as.character(tbl['you'])) +
                 as.numeric(as.character(tbl['me']))] -
   datsenders$date[1]
@@ -140,15 +140,15 @@ bp <-
   geom_bar(width = 1, stat = 'identity')
 
 bp + 
-	ggtitle('number of messages sent') + 
-	coord_polar('y', start=0) + 
-	minimalplottheme + 
-	geom_text(aes(y = value/3 + c(0,
-                    cumsum(value)[-length(value)]),
-                    label = value),
-                size=3,
-                colour='cornflowerblue') +
-	scale_fill_brewer(palette='Pastel2')
+  ggtitle('number of messages sent') + 
+  coord_polar('y', start=0) + 
+  minimalplottheme + 
+  geom_text(aes(y = value/3 + c(0,
+                  cumsum(value)[-length(value)]),
+                  label = value),
+            size=3,
+            colour='cornflowerblue') +
+  scale_fill_brewer(palette='Pastel2')
 
 # messages over time
 ggplot(datsenders,
@@ -188,7 +188,7 @@ dataft <- freq_terms(words,
                      stopwords = c(qdapDictionaries::Top25Words,
                                    'media',
                                    'omitted')) %>%
-	    data.frame()
+	  data.frame()
 colnames(dataft) <- c('word', 'freq') # nicer labels in the plot
 dataft$word <- factor(dataft$word, levels = dataft$word[order(-dataft$freq)])
 ggplot(dataft, aes(word, freq)) +
