@@ -37,12 +37,12 @@
       ## '([0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9], [0-9][0-9]:[0-9][0-9])'
       ## -> ''
     ### use html converter plugin to convert emojis
+    ### put every emoji in a new line
+      ## ' ' -> '\n'
     ### remove non-html with regex '^(?!.*\#)^(?!.*\:).*$' -> ''
     ### more cleanup with regex
       ## ' *[A-Z] *' -> ''
       ## '[0-9]+(&#[0-9]+)' -> '\1'
-    ### put every emoji in a new line
-      ## ' ' -> '\n'
     ### replace '\n\n' -> '\n'
       ## repeat until no more matches are found
     ### open in excel (without delimiters) and save as 'chat_emojis.csv'
