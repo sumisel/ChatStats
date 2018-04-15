@@ -24,9 +24,14 @@
       ## inverse bookmarks
       ## F2 to find remove linebreaks manually
       ## after you're done, clear all bookmarks
-  #### open in excel
-    ### encoding utf-8
-    ### space separated
+  #### convert to csv
+    ### open an empty excel
+    ### open the txt within excel
+    ### when opening, in the first dialogue select
+      ## delimited (as opposed to fixed)
+      ## encoding utf-8
+    ### on the second page of the dialogue, select
+      ## space separated nad nothing else
     ### save as chat.csv
   #### create extra dataset for emojis
     ### open chat in notepad++ again
